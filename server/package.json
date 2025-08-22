@@ -28,7 +28,7 @@
     "croner": "^9.1.0",
     "dotenv": "^16.6.1",
     "drizzle-orm": "^0.43.1",
-    "hono": "^4.9.2",
+    "hono": "^4.9.4",
     "nanotimer": "^0.3.15",
     "obscenity": "^0.4.4",
     "pg": "^8.16.3",
@@ -42,7 +42,7 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",
     "@types/nanotimer": "^0.3.2",
-    "@types/node": "^22.17.2",
+    "@types/node": "~20.19.11",
     "@types/pg": "^8.15.5",
     "concurrently": "^9.2.0",
     "drizzle-kit": "^0.31.4",
