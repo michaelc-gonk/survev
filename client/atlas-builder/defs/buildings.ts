@@ -81,6 +81,7 @@ export const BuildingSprites = {
         "map/map-planter-03.svg",
         "map/map-planter-04.svg",
         "map/map-planter-05.svg",
+        "map/map-planter-07.svg",
         "map/map-planter-res-01.svg",
     ],
 
@@ -298,6 +299,7 @@ export const BuildingSprites = {
         "map/map-bunker-chrys-compartment-ceiling-03b.svg",
         "map/map-bunker-chrys-compartment-floor-01a.svg",
         "map/map-bunker-chrys-compartment-floor-01b.svg",
+        "map/map-bunker-chrys-compartment-floor-01d.svg",
         "map/map-bunker-chrys-compartment-floor-02a.svg",
         "map/map-bunker-chrys-compartment-floor-02b.svg",
         "map/map-bunker-chrys-compartment-floor-03a.svg",
@@ -309,7 +311,6 @@ export const BuildingSprites = {
         "map/map-bunker-eye-chamber-floor-01b.svg",
         "map/map-bunker-eye-compartment-ceiling-01.svg",
         "map/map-bunker-eye-compartment-floor-01.svg",
-
         // removed tree switches...
         // "map/map-tree-switch-01.svg",
         // "map/map-tree-switch-02.svg",
