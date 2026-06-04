@@ -151,6 +151,7 @@ test("Map Msg", () => {
         }
 
         expect(a).toStrictEqual({
+            bound: b.bound,
             color: b.color,
             roughness: expect.closeTo(b.roughness, 5),
             offsetDist: expect.closeTo(b.offsetDist, 5),
