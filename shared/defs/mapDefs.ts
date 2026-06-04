@@ -88,6 +88,9 @@ export interface MapDef {
             waterRipple: number;
             beach: number;
             riverbank: number;
+            lakeWater?: number;
+            lakeWaterRipple?: number;
+            lakeRiverbank?: number;
             grass: number;
             underground: number;
             playerSubmerge: number;
@@ -189,6 +192,7 @@ export interface MapDef {
                     innerRad: number;
                     outerRad: number;
                     centerObj?: string;
+                    riverMaskRad?: number;
                     spawnBound: {
                         pos: Vec2;
                         rad: number;
