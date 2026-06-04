@@ -6409,7 +6409,7 @@ function createOasis<T extends BuildingDef>(e: Partial<T>): T {
         mapObstacleBounds: [collider.createCircle(v2.create(0, 0), 40)],
         mapGroundPatches: [
             {
-                circle: { pos: v2.create(0, 0), radius: 40 },
+                bound: collider.createCircle(v2.create(0, 0), 40),
                 color: 0x709e59,
                 roughness: 0.3,
                 offsetDist: 2,
