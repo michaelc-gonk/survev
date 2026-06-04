@@ -24,6 +24,7 @@ import { SmokeBarn } from "../../src/objects/smoke.ts";
 import { Renderer } from "../../src/renderer.ts";
 import type { ResourceManager } from "../../src/resources.ts";
 import type { UiManager2 } from "../../src/ui/ui2.ts";
+import { collider } from "../../../shared/utils/collider.ts";
 
 export class EditorDisplay {
     active = false;
@@ -332,15 +333,29 @@ export class EditorDisplay {
 
         if (def.mapGroundPatches) {
             for (const patch of def.mapGroundPatches) {
-                this.mapMsg.groundPatches.push({
-                    min: math.addAdjust(pos, patch.bound.min, ori),
-                    max: math.addAdjust(pos, patch.bound.max, ori),
-                    color: patch.color,
-                    roughness: patch.roughness ?? 0,
-                    offsetDist: patch.offsetDist ?? 0,
-                    order: patch.order ?? 0,
-                    useAsMapShape: patch.useAsMapShape ?? true,
-                });
+                if (patch.bound.type === collider.Type.Circle) {
+                    const worldCenter = math.addAdjust(pos, patch.bound.pos, ori);
+                    this.mapMsg.groundPatches.push({
+                        bound: collider.createCircle(worldCenter, patch.bound.rad),
+                        color: patch.color,
+                        roughness: patch.roughness ?? 0,
+                        offsetDist: patch.offsetDist ?? 0,
+                        order: patch.order ?? 0,
+                        useAsMapShape: patch.useAsMapShape ?? true,
+                    });
+                } else {
+                    this.mapMsg.groundPatches.push({
+                        bound: collider.createAabb(
+                            math.addAdjust(pos, patch.bound.min, ori),
+                            math.addAdjust(pos, patch.bound.max, ori),
+                        ),
+                        color: patch.color,
+                        roughness: patch.roughness ?? 0,
+                        offsetDist: patch.offsetDist ?? 0,
+                        order: patch.order ?? 0,
+                        useAsMapShape: patch.useAsMapShape ?? true,
+                    });
+                }
             }
         }
 
