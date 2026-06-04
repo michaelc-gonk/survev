@@ -1,11 +1,11 @@
 import { GameObjectDefs, MapObjectDefs } from "../defs/register.ts";
 import { GameConfig } from "../gameConfig.ts";
 import * as bb from "../lib/bitBuffer.ts";
+import type { Collider } from "../utils/coldet.ts";
+import { collider } from "../utils/collider.ts";
 import { math } from "../utils/math.ts";
 import { assert } from "../utils/util.ts";
 import type { Vec2 } from "../utils/v2.ts";
-import type { Collider } from "../utils/coldet.ts";
-import { collider } from "../utils/collider.ts";
 
 export const Constants = {
     MaxPosition: 1024,
@@ -186,9 +186,9 @@ export class BitStream extends bb.BitStream {
 
         return array;
     }
-// thanks leia - hppig
+    // thanks leia - hppig
     writeCollider(col: Collider) {
-    this.writeUint8(col.type);
+        this.writeUint8(col.type);
         if (col.type === collider.Type.Circle) {
             this.writeMapPos(col.pos);
             this.writeFloat(col.rad, 0, Constants.MaxPosition, 16);
@@ -203,7 +203,7 @@ export class BitStream extends bb.BitStream {
         if (type === collider.Type.Circle) {
             return collider.createCircle(
                 this.readMapPos(),
-                this.readFloat(0, Constants.MaxPosition, 16)
+                this.readFloat(0, Constants.MaxPosition, 16),
             );
         } else {
             return collider.createAabb(

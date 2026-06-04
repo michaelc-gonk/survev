@@ -1,8 +1,8 @@
 import type { MapDef } from "../defs/mapDefs.ts";
+import type { Collider } from "../utils/coldet.ts";
 import type { MapRiverData } from "../utils/terrainGen.ts";
 import type { Vec2 } from "../utils/v2.ts";
 import { type AbstractMsg, type BitStream, Constants } from "./net.ts";
-import type { Collider } from "../utils/coldet.ts";
 
 function serializeMapRiver(s: BitStream, data: MapRiverData) {
     s.writeUint8(data.width);

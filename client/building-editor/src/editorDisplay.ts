@@ -4,6 +4,7 @@ import { MapObjectDefs } from "../../../shared/defs/register.ts";
 import { MapMsg } from "../../../shared/net/mapMsg.ts";
 import { type ObjectData, ObjectType } from "../../../shared/net/objectSerializeFns.ts";
 import type { LocalDataWithDirty } from "./../../../shared/net/updateMsg.ts";
+import { collider } from "../../../shared/utils/collider.ts";
 import { math } from "../../../shared/utils/math.ts";
 import { util } from "../../../shared/utils/util.ts";
 import { v2, type Vec2 } from "../../../shared/utils/v2.ts";
@@ -24,7 +25,6 @@ import { SmokeBarn } from "../../src/objects/smoke.ts";
 import { Renderer } from "../../src/renderer.ts";
 import type { ResourceManager } from "../../src/resources.ts";
 import type { UiManager2 } from "../../src/ui/ui2.ts";
-import { collider } from "../../../shared/utils/collider.ts";
 
 export class EditorDisplay {
     active = false;

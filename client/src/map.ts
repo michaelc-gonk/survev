@@ -10,7 +10,11 @@ import { collider } from "../../shared/utils/collider.ts";
 import { mapHelpers } from "../../shared/utils/mapHelpers.ts";
 import { math } from "../../shared/utils/math.ts";
 import type { River } from "../../shared/utils/river.ts";
-import { generateJaggedAabbPoints, generateJaggedCirclePoints, generateTerrain } from "../../shared/utils/terrainGen.ts";
+import {
+    generateJaggedAabbPoints,
+    generateJaggedCirclePoints,
+    generateTerrain,
+} from "../../shared/utils/terrainGen.ts";
 import { util } from "../../shared/utils/util.ts";
 import { v2, type Vec2 } from "../../shared/utils/v2.ts";
 import type { Ambiance } from "./ambiance.ts";
@@ -690,18 +694,16 @@ export class Map {
             if (type == "water") {
                 const mapColors = this.getMapDef().biome.colors;
                 const isLake = data.river?.looped ?? false;
-                data.waterColor =
-                    data.waterColor !== undefined
-                        ? data.waterColor
-                        : isLake
-                          ? (mapColors.lakeWater ?? mapColors.water)
-                          : mapColors.water;
-                data.rippleColor =
-                    data.rippleColor !== undefined
-                        ? data.rippleColor
-                        : isLake
-                          ? (mapColors.lakeWaterRipple ?? mapColors.waterRipple)
-                          : mapColors.waterRipple;
+                data.waterColor = data.waterColor !== undefined
+                    ? data.waterColor
+                    : isLake
+                    ? (mapColors.lakeWater ?? mapColors.water)
+                    : mapColors.water;
+                data.rippleColor = data.rippleColor !== undefined
+                    ? data.rippleColor
+                    : isLake
+                    ? (mapColors.lakeWaterRipple ?? mapColors.waterRipple)
+                    : mapColors.waterRipple;
             }
             return {
                 type,
