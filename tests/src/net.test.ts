@@ -3,6 +3,7 @@ import { Main } from "../../shared/defs/maps/baseDefs.ts";
 import { GameConfig, GasMode } from "../../shared/gameConfig.ts";
 import * as net from "../../shared/net/net.ts";
 import { ObjectType } from "../../shared/net/objectSerializeFns.ts";
+import { collider } from "../../shared/utils/collider.ts";
 import { util } from "../../shared/utils/util.ts";
 import { v2 } from "../../shared/utils/v2.ts";
 
@@ -56,13 +57,14 @@ test("Map Msg", () => {
 
     inMsg.groundPatches = Array.from({ length: 100 }, () => {
         return {
+            bound: Math.random() > 0.5
+                ? collider.createCircle(randomPos(), Math.random() * 100)
+                : collider.createAabb(randomPos(), randomPos()),
             color: util.randomInt(0, 1 << 24),
             roughness: Math.random(),
             offsetDist: Math.random(),
             order: util.randomInt(0, (1 << 7) - 1),
             useAsMapShape: false,
-            min: randomPos(),
-            max: randomPos(),
         };
     });
 
