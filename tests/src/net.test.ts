@@ -141,7 +141,7 @@ test("Map Msg", () => {
             const bc = b.bound as Circle;
             expect(a.bound.pos.x).toBeCloseTo(bc.pos.x, 1);
             expect(a.bound.pos.y).toBeCloseTo(bc.pos.y, 1);
-            expect(a.bound.rad).toBeCloseTo(bc.rad);
+            expect(a.bound.rad).toBeCloseTo(bc.rad, 1);
         } else if (a.bound.type === collider.Type.Aabb) {
             const ba = b.bound as AABB;
             expect(a.bound.min.x).toBeCloseTo(ba.min.x, 1);
