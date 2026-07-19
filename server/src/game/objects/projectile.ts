@@ -427,9 +427,14 @@ export class Projectile extends BaseGameObject {
             return;
         }
 
-        const explosionType = def.explosionType;
+        const source = this.game.objectRegister.getById(this.playerId);
+        const sourcePlayer = source?.__type === ObjectType.Player ? source : undefined;
+
+        const explosionType = sourcePlayer?.hasPerk("makeshift") && def.makeshift_explosionType
+            ? def.makeshift_explosionType
+            : def.explosionType;
+
         if (explosionType) {
-            const source = this.game.objectRegister.getById(this.playerId);
             this.game.explosionBarn.addExplosion(explosionType, this.pos, this.layer, {
                 gameSourceType: this.type,
                 weaponSourceType: this.weaponSourceType,

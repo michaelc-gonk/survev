@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="128"
+   height="128"
+   viewBox="0 0 33.866666 33.866666"
+   version="1.1"
+   id="svg1"
+   xml:space="preserve"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   sodipodi:docname="loot-perk-makeshift.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview1"
+     pagecolor="#818181"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="2.3552938"
+     inkscape:cx="58.591418"
+     inkscape:cy="61.775734"
+     inkscape:window-width="1920"
+     inkscape:window-height="1022"
+     inkscape:window-x="0"
+     inkscape:window-y="128"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" /><defs
+     id="defs1" /><g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"><path
+       id="path4"
+       style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#ffffff;stroke-width:0.9;paint-order:fill markers stroke;enable-background:accumulate;stop-color:#000000"
+       d="m 25.394091,4.9367168 c 0.01092,0.09246 0.01635,0.1854854 0.01628,0.2785876 -2.3e-5,0.4853422 -0.14959,0.9588902 -0.428346,1.3561962 l 0.849716,0.7715808 1.996362,7.1404306 1.736898,1.269289 -2.455667,-9.163627 z"
+       sodipodi:nodetypes="cccccccc" /><path
+       id="path2"
+       style="font-variation-settings:normal;vector-effect:none;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.81;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;paint-order:fill markers stroke;stop-color:#000000"
+       d="M 15.277039,3.3739733 14.49546,7.4100059 c 0.397018,-0.039949 0.795788,-0.059973 1.194811,-0.059997 2.322176,-6.16e-5 4.593982,0.6769872 6.537275,1.9482532 h 2.293349 L 23.688387,7.4811644 C 23.48029,7.5398417 23.265103,7.5695768 23.048891,7.5695309 21.748717,7.5693954 20.694752,6.5154301 20.694617,5.215256 20.694583,4.4984902 21.021048,3.8207408 21.58154,3.3739731 Z"
+       sodipodi:nodetypes="cccccccccc" /><path
+       id="path1"
+       style="font-variation-settings:normal;vector-effect:none;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.952497;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000"
+       d="M 15.690271,7.902069 C 9.4005437,7.902132 4.3017272,13.000949 4.3016637,19.290676 4.3017268,25.580404 9.4005428,30.67922 15.690271,30.679283 21.979999,30.67922 27.078815,25.580404 27.078878,19.290676 27.078815,13.000949 21.979998,7.9021321 15.690271,7.902069 Z m -1.324105,3.163062 c 0.995023,1.36e-4 1.801615,0.806729 1.80175,1.801752 1.21e-4,0.995205 -0.806545,1.80208 -1.80175,1.802215 -0.995387,1.21e-4 -1.802337,-0.806829 -1.802216,-1.802215 1.35e-4,-0.995205 0.807011,-1.801873 1.802216,-1.801752 z m 5.754067,1.235739 c 0.995205,1.35e-4 1.801872,0.807011 1.80175,1.802216 -1.35e-4,0.995023 -0.806727,1.801615 -1.80175,1.80175 -0.995205,1.22e-4 -1.802081,-0.806545 -1.802216,-1.80175 -1.21e-4,-0.995387 0.806829,-1.802337 1.802216,-1.802216 z m -3.843021,3.866276 c 0.995023,1.35e-4 1.801616,0.806727 1.801751,1.80175 1.21e-4,0.995205 -0.806546,1.802081 -1.801751,1.802216 -0.995386,1.22e-4 -1.802337,-0.806829 -1.802215,-1.802216 1.35e-4,-0.995204 0.807011,-1.801872 1.802215,-1.80175 z"
+       sodipodi:nodetypes="cccccccccccccccccccc" /><circle
+       style="font-variation-settings:normal;fill:none;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.714375;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000"
+       id="path3"
+       cx="23.048944"
+       cy="5.2152095"
+       r="1.6706387" /></g></svg>

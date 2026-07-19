@@ -15649,7 +15649,12 @@ export const RawMapObjectDefs: Record<string, MapObjectDef> = {
         health: 250,
         scale: { createMin: 1.5, createMax: 1.7, destroy: 0.95 },
         collision: collider.createCircle(v2.create(0, 0), 1),
-        loot: [autoLoot("coconut", 3), autoLoot("coconut", 3), autoLoot("coconut", 3)],
+        loot: [
+            autoLoot("coconut", 3),
+            autoLoot("coconut", 3),
+            autoLoot("coconut", 3),
+            autoLoot("makeshift", 1),
+        ],
         img: {
             sprite: "map-tree-14.img",
             scale: 0.35,

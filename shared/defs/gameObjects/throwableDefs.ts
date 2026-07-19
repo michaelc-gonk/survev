@@ -5,6 +5,7 @@ export interface ThrowableDef {
     name: string;
     quality: number;
     explosionType: string;
+    makeshift_explosionType?: string;
     inventoryOrder: number;
     cookable: boolean;
     explodeOnImpact: boolean;
@@ -540,6 +541,7 @@ export const ThrowableDefs: Record<string, ThrowableDef> = {
         type: "throwable",
         quality: 0,
         explosionType: "explosion_potato",
+        makeshift_explosionType: "explosion_potato_makeshift",
         freezeOnImpact: true,
         heavyType: "potato_heavy",
         changeTime: 1,
@@ -608,6 +610,7 @@ export const ThrowableDefs: Record<string, ThrowableDef> = {
         type: "throwable",
         quality: 0,
         explosionType: "explosion_potato_heavy",
+        makeshift_explosionType: "explosion_potato_heavy_makeshift",
         inventoryOrder: 0,
         noPotatoSwap: true,
         cookable: true,
@@ -849,6 +852,7 @@ export const ThrowableDefs: Record<string, ThrowableDef> = {
         type: "throwable",
         quality: 0,
         explosionType: "explosion_coconut",
+        makeshift_explosionType: "explosion_coconut_makeshift",
         freezeOnImpact: true,
         changeTime: 1,
         inventoryOrder: 0,
@@ -916,6 +920,7 @@ export const ThrowableDefs: Record<string, ThrowableDef> = {
         type: "throwable",
         quality: 0,
         explosionType: "explosion_tomato",
+        makeshift_explosionType: "explosion_tomato_makeshift",
         freezeOnImpact: true,
         changeTime: 1,
         inventoryOrder: 0,

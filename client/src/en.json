@@ -724,6 +724,8 @@
   "game-scavenger_adv-desc": "Obstacles drop additional high-quality items when destroyed.",
   "game-pirate": "Pirate's Bounty",
   "game-pirate-desc": "Melee kills drop additional loot with a small chance for high-quality weapons.",
+  "game-makeshift": "Makeshift Explosives",
+  "game-makeshift-desc": "Miscellaneous throwables become contact explosives with increased damage, but lose their secondary effects.",
   "game-hunted": "The Hunted",
   "game-hunted-desc": "Your location is revealed to all enemies.",
   "game-chambered": "One in the Chamber",
