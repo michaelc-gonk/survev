@@ -1128,7 +1128,7 @@ const SkinDefs: Record<string, OutfitDef> = {
         },
     }),
     outfitGold: defineOutfitSkin("outfitBase", {
-        name: "Captial Gains",
+        name: "Capital Gains",
         lore: "Justice for Chrome",
         skinImg: {
             baseTint: 0xffffff,
