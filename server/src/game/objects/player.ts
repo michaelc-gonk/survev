@@ -135,13 +135,6 @@ export class PlayerBarn {
         this.playerStatusRate = net.getPlayerStatusUpdateRate(this.game.map.factionMode);
     }
 
-    randomPlayer(player?: Player) {
-        const livingPlayers = player
-            ? this.livingPlayers.filter((p) => p != player)
-            : this.livingPlayers;
-        return livingPlayers[util.randomInt(0, livingPlayers.length - 1)];
-    }
-
     addPlayer(
         client: Client,
         joinMsg: net.JoinMsg,
@@ -365,7 +358,7 @@ export class PlayerBarn {
 
                     if (!finalPlayers.length) continue;
 
-                    const randomPlayer = util.randomItem(finalPlayers)!;
+                    const randomPlayer = util.randomItem(finalPlayers);
                     randomPlayer.promoteToRole(scheduledRole.role);
                 }
             }
@@ -459,18 +452,6 @@ export class PlayerBarn {
         }
     }
 
-    isTeamGameOver(): boolean {
-        const groupAlives = [...this.groups.values()].filter(
-            (group) => !group.allDeadOrDisconnected,
-        );
-
-        if (groupAlives.length <= 1) {
-            return true;
-        }
-
-        return false;
-    }
-
     getAliveGroups(): Group[] {
         return [...this.groups.values()].filter(
             (group) => group.livingPlayers.length > 0,
@@ -549,23 +530,6 @@ export class PlayerBarn {
         this.groups.push(group);
         this.groupsByHash.set(hash, group);
         return group;
-    }
-
-    nextTeam(currentTeam: Group) {
-        const aliveTeams = Array.from(this.groups.values()).filter(
-            (t) => !t.allDeadOrDisconnected,
-        );
-        const currentTeamIndex = aliveTeams.indexOf(currentTeam);
-        const newIndex = (currentTeamIndex + 1) % aliveTeams.length;
-        return aliveTeams[newIndex];
-    }
-
-    prevTeam(currentTeam: Group) {
-        const aliveTeams = Array.from(this.groups.values()).filter(
-            (t) => !t.allDeadOrDisconnected,
-        );
-        const currentTeamIndex = aliveTeams.indexOf(currentTeam);
-        return aliveTeams.at(currentTeamIndex - 1) ?? currentTeam;
     }
 
     getPlayerWithHighestKills(): Player | undefined {
@@ -1494,8 +1458,7 @@ export class Player extends BaseGameObject {
             if (this.roleMenuTicker <= 0) {
                 this.roleMenuTicker = 0;
                 const roleChoices = this.game.map.mapDef.gameMode.perkModeRoles!;
-                const randomRole = roleChoices[util.randomInt(0, roleChoices.length - 1)];
-                this.roleSelect(randomRole);
+                this.roleSelect(util.randomItem(roleChoices));
             }
         }
 
@@ -1631,7 +1594,7 @@ export class Player extends BaseGameObject {
             const emotes = Object.keys(EmotesDefs);
 
             this.game.playerBarn.addEmote(
-                emotes[Math.floor(Math.random() * emotes.length)],
+                util.randomItem(emotes),
                 this.__id,
             );
         }
@@ -2757,7 +2720,7 @@ export class Player extends BaseGameObject {
 
                 if (!lonePerks) {
                     if (rolePerks.length > 0 && perkPool.length > 0) {
-                        const perkToReplace = rolePerks[util.randomInt(0, rolePerks.length - 1)].type;
+                        const perkToReplace = util.randomItem(rolePerks).type;
                         const candidatePerks = perkPool.filter(
                             (p) => !killCreditSource.hasPerk(p),
                         );
@@ -3947,7 +3910,7 @@ export class Player extends BaseGameObject {
 
         if (playerLootTypes.length == 0) return;
 
-        const item = playerLootTypes[util.randomInt(0, playerLootTypes.length - 1)];
+        const item = util.randomItem(playerLootTypes);
         const weapIdx = this.weapons.findIndex((w) => w.type == item);
 
         const dropMsg = new net.DropItemMsg();
@@ -3984,7 +3947,7 @@ export class Player extends BaseGameObject {
             : ([_type, def]) => !def.noPotatoSwap;
 
         const weaponChoices = enumerableDefs.filter(filterCb);
-        const [chosenWeaponType, chosenWeaponDef] = weaponChoices[util.randomInt(0, weaponChoices.length - 1)];
+        const [chosenWeaponType, chosenWeaponDef] = util.randomItem(weaponChoices);
 
         let index;
         if (this.activeWeapon === oldWeapon) {
@@ -4468,10 +4431,10 @@ export class Player extends BaseGameObject {
             player._lastBreathTicker = 5;
 
             player.giveHaste(GameConfig.HasteType.Inspire, 5);
-            if (player.teamId == 1 && player.__id != this.__id) {
+            if (player.teamId == GameConfig.FactionTeam.Red && player.__id != this.__id) {
                 this.game.playerBarn.addEmote("emote_bugle_final_red", player.__id);
             }
-            if (player.teamId == 2 && player.__id != this.__id) {
+            if (player.teamId == GameConfig.FactionTeam.Blue && player.__id != this.__id) {
                 this.game.playerBarn.addEmote("emote_bugle_final_blue", player.__id);
             }
             player.recalculateScale();
@@ -4489,10 +4452,10 @@ export class Player extends BaseGameObject {
 
         for (const player of affectedPlayers) {
             player.giveHaste(GameConfig.HasteType.Inspire, 3);
-            if (player.teamId == 1 && player.__id != this.__id) {
+            if (player.teamId == GameConfig.FactionTeam.Red && player.__id != this.__id) {
                 this.game.playerBarn.addEmote("emote_bugle_inspiration_red", player.__id);
             }
-            if (player.teamId == 2 && player.__id != this.__id) {
+            if (player.teamId == GameConfig.FactionTeam.Blue && player.__id != this.__id) {
                 this.game.playerBarn.addEmote(
                     "emote_bugle_inspiration_blue",
                     player.__id,
@@ -4546,9 +4509,9 @@ export class Player extends BaseGameObject {
         }
 
         if (this.game.map.potatoMode && this.game.map.factionMode) {
-            if (this.teamId === 1) {
+            if (this.teamId === GameConfig.FactionTeam.Red) {
                 emote = "emote_tomato";
-            } else if (this.teamId === 2) {
+            } else if (this.teamId === GameConfig.FactionTeam.Blue) {
                 emote = "emote_potato";
             }
         }

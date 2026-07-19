@@ -343,7 +343,7 @@ export class Obstacle implements AbstractObject {
                     const aabb = collider.toAabb(this.collider);
                     const extent = v2.mul(v2.sub(aabb.max, aabb.min), 0.5);
                     const center = v2.add(aabb.min, extent);
-                    const vel = v2.mul(v2.randomUnit(), util.random(5, 15));
+                    const vel = v2.randomUnit(util.random(5, 15));
                     particleBarn.addParticle(
                         def.button.useParticle,
                         this.layer,
@@ -446,11 +446,9 @@ export class Obstacle implements AbstractObject {
                 const center = v2.add(aabb.min, extent);
                 const numParticles = Math.floor(util.random(5, 11));
                 for (let i = 0; i < numParticles; i++) {
-                    const vel = v2.mul(v2.randomUnit(), util.random(5, 15));
+                    const vel = v2.randomUnit(util.random(5, 15));
                     const particle = Array.isArray(this.explodeParticle)
-                        ? this.explodeParticle[
-                            Math.floor(Math.random() * this.explodeParticle.length)
-                        ]
+                        ? util.randomItem(this.explodeParticle)
                         : this.explodeParticle;
                     particleBarn.addParticle(particle, this.layer, center, vel);
                 }

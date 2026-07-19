@@ -2,8 +2,7 @@ import { styleText } from "node:util";
 import { type MapDef, MapDefs } from "../../../shared/defs/mapDefs.ts";
 import type { BuildingDef, ObstacleDef, StructureDef } from "../../../shared/defs/mapObjectsTyping.ts";
 import { MapObjectDefs } from "../../../shared/defs/register.ts";
-import type { MapId } from "../../../shared/defs/types/misc.ts";
-import { GameConfig, TeamMode } from "../../../shared/gameConfig.ts";
+import { GameConfig, MapId, TeamMode } from "../../../shared/gameConfig.ts";
 import * as net from "../../../shared/net/net.ts";
 import { MsgStream, MsgType } from "../../../shared/net/net.ts";
 import { ObjectType } from "../../../shared/net/objectSerializeFns.ts";
@@ -307,6 +306,7 @@ export class GameMap {
 
     init(seed?: number) {
         this.seed = seed ?? util.randomInt(0, 2 ** 32 - 1);
+        this.game.logger.debug("Generating map with seed", this.seed);
 
         this.obstacles = [];
         this.dynamicObstacles = [];
@@ -1469,7 +1469,7 @@ export class GameMap {
         const def = MapObjectDefs.typeToDef(type);
         if (def.type === "building" || def.type === "structure") {
             if ("oris" in def && def.oris?.length) {
-                ori = util.randomItem(def.oris, rand)!;
+                ori = util.randomItem(def.oris, rand);
             } else {
                 ori = def.ori ?? util.randomInt(0, 3, rand);
             }
@@ -1723,26 +1723,26 @@ export class GameMap {
             scale = oriAndScale.scale;
 
             const t = util.random(0, 1);
-            let finalRiver = river ?? rivers[util.randomInt(0, rivers.length - 1)];
+            const selectedRiver = river ?? util.randomItem(rivers);
 
-            let pos = finalRiver.spline.getPos(t);
+            let pos = selectedRiver.spline.getPos(t);
 
             if (def.terrain?.nearbyRiver) {
                 const otherSide = Math.random() < 0.5;
 
-                const offset = finalRiver.waterWidth * 2 * (otherSide ? -1 : 1);
-                let norm = finalRiver.spline.getNormal(t);
+                const offset = selectedRiver.waterWidth * 2 * (otherSide ? -1 : 1);
+                let norm = selectedRiver.spline.getNormal(t);
                 v2.set(pos, v2.add(pos, v2.mul(norm, offset)));
 
-                const finalT = finalRiver.spline.getClosestTtoPoint(pos);
-                const finalNorm = finalRiver.spline.getNormal(finalT);
+                const finalT = selectedRiver.spline.getClosestTtoPoint(pos);
+                const finalNorm = selectedRiver.spline.getNormal(finalT);
 
                 const riverOri = (math.radToOri(Math.atan2(finalNorm.y, finalNorm.x))
                     + (otherSide ? 2 : 0))
                     % 4;
                 ori = (def.terrain.nearbyRiver.facingOri + riverOri) % 4;
             } else {
-                const norm = finalRiver.spline.getNormal(t);
+                const norm = selectedRiver.spline.getNormal(t);
                 ori = math.radToOri(Math.atan2(norm.y, norm.x));
             }
             if (type === "bunker_structure_05") {
@@ -1777,7 +1777,7 @@ export class GameMap {
         if (!rivers.length) return;
 
         this.trySpawn(type, () => {
-            const selectedRiver = river ?? util.randomItem(rivers)!;
+            const selectedRiver = river ?? util.randomItem(rivers);
             const t = util.random(0, 1);
             const def = MapObjectDefs.typeToDef(type);
 
@@ -1811,17 +1811,17 @@ export class GameMap {
         if (!rivers.length) return;
 
         this.trySpawn(type, () => {
-            river = river ?? rivers[util.randomInt(0, rivers.length - 1)];
+            const selectedRiver = river ?? util.randomItem(rivers);
             const t = util.random(0, 1);
 
-            let width = river.getWaterWidth(t);
+            let width = selectedRiver.getWaterWidth(t);
 
-            let offset = util.random(width, width + river.shoreWidth);
+            let offset = util.random(width, width + selectedRiver.shoreWidth);
             if (Math.random() < 0.5) offset *= -1;
 
             const pos = v2.add(
-                river.spline.getPos(t),
-                v2.mul(river.spline.getNormal(t), offset),
+                selectedRiver.spline.getPos(t),
+                v2.mul(selectedRiver.spline.getNormal(t), offset),
             );
 
             const { ori, scale } = this.getOriAndScale(type);
@@ -1851,7 +1851,7 @@ export class GameMap {
 
         this.trySpawn(type, () => {
             const t = util.random(0.1, 0.9);
-            const river = this.normalRivers[util.randomInt(0, this.normalRivers.length - 1)];
+            const river = util.randomItem(this.normalRivers);
             let pos = river.spline.getPos(t);
 
             const otherSide = Math.random() < 0.5;
