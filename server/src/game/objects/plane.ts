@@ -1,5 +1,4 @@
 import type { MapDef } from "../../../../shared/defs/mapDefs.ts";
-
 import { GameObjectDefs, MapObjectDefs } from "../../../../shared/defs/register.ts";
 import { GameConfig, type Plane as PlaneType } from "../../../../shared/gameConfig.ts";
 import { Constants } from "../../../../shared/net/net.ts";
@@ -269,7 +268,7 @@ export class PlaneBarn {
                 : current;
         }, players[0]);
 
-        const pos = v2.add(furthestLosingTeamPlayer.pos, v2.mul(v2.randomUnit(), 5));
+        const pos = v2.add(furthestLosingTeamPlayer.pos, v2.randomUnit(5));
 
         // Faction golden airdrop
         if (this.game.map.potatoMode) {

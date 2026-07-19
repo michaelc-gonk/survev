@@ -1,23 +1,20 @@
 import { serve } from "@hono/node-server";
 import { createNodeWebSocket } from "@hono/node-ws";
 import { Cron } from "croner";
-import { randomUUID } from "crypto";
 import { Hono } from "hono";
 import { getCookie } from "hono/cookie";
 import { cors } from "hono/cors";
 import { HTTPException } from "hono/http-exception";
+import { randomUUID } from "node:crypto";
 import pkgJson from "../../../package.json" with { type: "json" };
 import { type FindGameResponse, type SiteInfoRes, zFindGameBody } from "../../../shared/types/api.ts";
 import { Config } from "../config.ts";
 import { GIT_VERSION } from "../utils/gitRevision.ts";
-import { getFindGamePlayerData } from "../utils/playerData.ts";
-import {
-    getHonoIp,
-    HTTPRateLimit,
-    isBehindProxy,
-    logErrorToWebhook,
-    verifyTurnsStile,
-} from "../utils/serverHelpers.ts";
+import { logErrorToWebhook } from "../utils/logger.ts";
+import { isBehindProxy } from "../utils/proxyCheck.ts";
+import { HTTPRateLimit } from "../utils/rateLimit.ts";
+import { getFindGamePlayerData } from "./apiHelpers.ts";
+import { getHonoIp, verifyTurnsStile } from "./apiHelpers.ts";
 import { server } from "./apiServer.ts";
 import { deleteExpiredSessions, validateSessionToken } from "./auth/index.ts";
 import { rateLimitMiddleware, validateParams } from "./auth/middleware.ts";
@@ -53,6 +50,18 @@ app.onError((err: unknown, c) => {
     }
     return c.text("Internal Server Error", 500);
 });
+
+if (server.logger.config.debugLogs) {
+    app.use("*", async (ctx, next) => {
+        const url = ctx.req.path;
+        server.logger.debug(`start: ${url}`);
+        const start = performance.now();
+        await next();
+
+        const time = Math.round(performance.now() - start);
+        server.logger.debug(`end  : ${url} time: ${time}ms`);
+    });
+}
 
 app.use(
     "/api/*",
@@ -122,7 +131,7 @@ app.post("/api/find_game", validateParams(zFindGameBody), async (c) => {
         }
     }
 
-    if (await isBehindProxy(ip, user ? 0 : 3)) {
+    if (await isBehindProxy(ip, !user)) {
         return c.json<FindGameResponse>({ error: "behind_proxy" });
     }
 

@@ -6,7 +6,7 @@ import slugify from "slugify";
 import { UnlockDefs } from "../../../../../../shared/defs/gameObjects/unlockDefs.ts";
 import { util } from "../../../../../../shared/utils/util.ts";
 import { Config } from "../../../../config.ts";
-import { checkForBadWords } from "../../../../utils/serverHelpers.ts";
+import { checkForBadWords } from "../../../../utils/badWords.ts";
 import { createSession, invalidateSession } from "../../../auth/index.ts";
 import { db } from "../../../db/index.ts";
 import { itemsTable, usersTable, type UsersTableInsert } from "../../../db/schema.ts";
@@ -18,7 +18,7 @@ if (URL.canParse(Config.oauthBasePath)) {
 export const cookieDomain = oauthBaseURL?.hostname;
 
 const random = {
-    read(bytes: Uint8Array) {
+    read(bytes: Uint8Array<ArrayBuffer>) {
         crypto.getRandomValues(bytes);
     },
 };

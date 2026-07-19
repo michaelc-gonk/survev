@@ -2,7 +2,7 @@ import { and, desc, eq, inArray, lt, ne } from "drizzle-orm";
 import { Hono } from "hono";
 import { createHash } from "node:crypto";
 import { z } from "zod";
-import { MapId, TeamModeToString } from "../../../../../shared/defs/types/misc.ts";
+import { GameConfig } from "../../../../../shared/gameConfig.ts";
 import {
     zBanAccountParams,
     zBanIpParams,
@@ -19,7 +19,7 @@ import {
 } from "../../../../../shared/types/moderation.ts";
 import { util } from "../../../../../shared/utils/util.ts";
 import { Config } from "../../../config.ts";
-import { validateUserName } from "../../../utils/serverHelpers.ts";
+import { validateUserName } from "../../../utils/badWords.ts";
 import type { SaveGameBody } from "../../../utils/types.ts";
 import { server } from "../../apiServer.ts";
 import { databaseEnabledMiddleware, validateParams } from "../../auth/middleware.ts";
@@ -223,24 +223,6 @@ export const ModerationRouter = new Hono()
             .execute();
         return c.json({ message: `IP ${encodedIp} has been unbanned.` }, 200);
     })
-    /**
-     * @deprecated
-     */
-    .post(
-        "/is_ip_banned",
-        validateParams(
-            z.object({
-                ip: z.string(),
-            }),
-        ),
-        async (c) => {
-            const { ip } = c.req.valid("json");
-
-            return c.json({
-                banned: (await isBanned(ip, false)) !== undefined,
-            });
-        },
-    )
     .post("/get_player_ip", validateParams(zGetPlayerIpParams), async (c) => {
         const { name, use_account_slug, game_id } = c.req.valid("json");
 
@@ -302,8 +284,8 @@ export const ModerationRouter = new Hono()
 
         const prettyResult = result.map((data) => ({
             ...data,
-            teamMode: TeamModeToString[data.teamMode],
-            mapId: MapId[data.mapId],
+            teamMode: GameConfig.TeamModeToString[data.teamMode],
+            mapId: GameConfig.MapId[data.mapId],
         }));
 
         return c.json(prettyResult, 200);

@@ -1,9 +1,9 @@
 import { Atlases } from "../../client/atlas-builder/atlasDefs.ts";
-import { type MapDef, MapDefs } from "../../shared/defs/mapDefs.ts";
+import { type MapDef, type MapDefKey, MapDefs } from "../../shared/defs/mapDefs.ts";
 import { MapObjectDefs } from "../../shared/defs/register.ts";
 
-export function getAllAtlasSprites(map: keyof typeof MapDefs) {
-    const def = MapDefs[map] as MapDef;
+export function getAllAtlasSprites(map: MapDefKey) {
+    const def = MapDefs[map];
     const sprites = new Set();
 
     for (const atlas of def.assets.atlases) {
@@ -69,6 +69,14 @@ function getBuildingSprites(type: string, sprites: Set<string>) {
     }
 }
 
+function getStructureSprites(type: string, sprites: Set<string>) {
+    const def = MapObjectDefs.typeToDef(type, "structure");
+
+    for (const layer of def.layers) {
+        getBuildingSprites(layer.type, sprites);
+    }
+}
+
 function getObjSprites(type: string, sprites: Set<string>) {
     if (!type) return;
     const def = MapObjectDefs.typeToDefSafe(type);
@@ -82,12 +90,16 @@ function getObjSprites(type: string, sprites: Set<string>) {
             getBuildingSprites(type, sprites);
             break;
         case "structure":
+            getStructureSprites(type, sprites);
+            break;
+        case "decal":
+            sprites.add(def.img.sprite);
             break;
     }
 }
 
-export function getAllMapSprites(map: keyof typeof MapDefs) {
-    const def = MapDefs[map] as MapDef;
+export function getAllMapSprites(map: MapDefKey) {
+    const def = MapDefs[map];
     const sprites = new Set<string>();
 
     for (const c of def.gameConfig.planes.crates) {

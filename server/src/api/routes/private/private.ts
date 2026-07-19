@@ -2,14 +2,13 @@ import { and, eq, inArray } from "drizzle-orm";
 import { Hono } from "hono";
 import { z } from "zod";
 import { saveConfig } from "../../../../../config.ts";
-
 import { QuestDefs } from "../../../../../shared/defs/gameObjects/questDefs.ts";
-import { MapDefs } from "../../../../../shared/defs/mapDefs.ts";
+import { type MapDefKey, MapDefs } from "../../../../../shared/defs/mapDefs.ts";
 import { GameObjectDefs } from "../../../../../shared/defs/register.ts";
 import { TeamMode } from "../../../../../shared/gameConfig.ts";
 import { zGiveItemParams, zRemoveItemParams } from "../../../../../shared/types/moderation.ts";
 import { serverConfigPath } from "../../../config.ts";
-import { isBehindProxy } from "../../../utils/serverHelpers.ts";
+import { isBehindProxy } from "../../../utils/proxyCheck.ts";
 import { type SaveGameBody, zSetClientThemeBody, zSetGameModeBody, zUpdateRegionBody } from "../../../utils/types.ts";
 import { server } from "../../apiServer.ts";
 import { databaseEnabledMiddleware, privateMiddleware, validateParams } from "../../auth/middleware.ts";
@@ -39,7 +38,7 @@ export const PrivateRouter = new Hono<Context>()
             enabled,
         } = c.req.valid("json");
 
-        if (!MapDefs[mapName as keyof typeof MapDefs]) {
+        if (!MapDefs[mapName as MapDefKey]) {
             return c.json({ error: "Invalid map name" }, 400);
         }
 
@@ -48,7 +47,7 @@ export const PrivateRouter = new Hono<Context>()
         }
 
         server.modes[index] = {
-            mapName: (mapName ?? server.modes[index].mapName) as keyof typeof MapDefs,
+            mapName: (mapName ?? server.modes[index].mapName) as MapDefKey,
             teamMode: teamMode ?? server.modes[index].teamMode,
             enabled: enabled ?? server.modes[index].enabled,
         };
@@ -65,11 +64,11 @@ export const PrivateRouter = new Hono<Context>()
     .post("/set_client_theme", validateParams(zSetClientThemeBody), (c) => {
         const { theme } = c.req.valid("json");
 
-        if (!MapDefs[theme as keyof typeof MapDefs]) {
+        if (!MapDefs[theme as MapDefKey]) {
             return c.json({ error: "Invalid map name" }, 400);
         }
 
-        server.clientTheme = theme as keyof typeof MapDefs;
+        server.clientTheme = theme as MapDefKey;
 
         saveConfig(serverConfigPath, {
             clientTheme: server.clientTheme,
@@ -125,10 +124,13 @@ export const PrivateRouter = new Hono<Context>()
             );
         }
 
-        await leaderboardCache.invalidateCache(matchData);
-
         await db.insert(matchDataTable).values(matchData);
         await logPlayerIPs(matchData);
+        try {
+            await leaderboardCache.invalidateCache(matchData);
+        } catch (e) {
+            server.logger.error("Failed to invalidate leaderboard cache", e);
+        }
         server.logger.info(`Saved game data for ${matchData[0].gameId}`);
         return c.json({}, 200);
     })
@@ -309,7 +311,7 @@ export const PrivateRouter = new Hono<Context>()
                 return c.json({ banned: true, banData: banData, behindProxy: false });
             }
 
-            const isProxied = await isBehindProxy(ip, 0);
+            const isProxied = await isBehindProxy(ip, false);
             if (isProxied) {
                 return c.json({ banned: false, banData: undefined, behindProxy: true });
             }
@@ -326,30 +328,37 @@ export const PrivateRouter = new Hono<Context>()
             }),
         ),
         async (c) => {
+            if (process.env.NODE_ENV === "production") {
+                return c.json({}, 403);
+            }
+
             const data = c.req.valid("json");
             const matchData: MatchDataTable = {
-                ...{
-                    gameId: crypto.randomUUID(),
-                    userId: MOCK_USER_ID,
-                    createdAt: new Date(),
-                    region: "na",
-                    mapId: 0,
-                    mapSeed: 9834567801234,
-                    username: MOCK_USER_ID,
-                    playerId: 9834,
-                    teamMode: TeamMode.Solo,
-                    teamCount: 4,
-                    teamTotal: 25,
-                    teamId: 7,
-                    timeAlive: 842,
-                    rank: 3,
-                    died: true,
-                    kills: 5,
-                    damageDealt: 1247,
-                    damageTaken: 862,
-                    killerId: 18765,
-                    killedIds: [12543, 13587, 14298, 15321, 16754],
-                },
+                gameId: crypto.randomUUID(),
+                userId: MOCK_USER_ID,
+                createdAt: new Date(),
+                region: "na",
+                mapId: 0,
+                mapSeed: 9834567801234,
+                username: MOCK_USER_ID,
+                playerId: 9834,
+                teamMode: TeamMode.Solo,
+                teamCount: 4,
+                teamTotal: 25,
+                teamId: 7,
+                timeAlive: 842,
+                rank: 3,
+                died: true,
+                damageDealt: 1247,
+                damageTaken: 862,
+                killerId: 18765,
+                killedIds: [
+                    12543,
+                    13587,
+                    14298,
+                    15321,
+                    16754,
+                ],
                 ...data,
             };
             await leaderboardCache.invalidateCache([matchData]);

@@ -3,30 +3,15 @@ import { z } from "zod";
 import { UnlockDefs } from "../defs/gameObjects/unlockDefs.ts";
 import { GameObjectDefs } from "../defs/register.ts";
 import { GameConfig } from "../gameConfig.ts";
+import type { loadoutSchema } from "../types/api.ts";
 import { deepEqual } from "./deepEqual.js";
 
 export type Item = {
     type: string;
     timeAcquired: number;
     source: string;
-    status?: ItemStatus;
-    ackd?: ItemStatus.Ackd;
+    status: ItemStatus;
 };
-
-export const loadoutSchema = z.object({
-    outfit: z.string(),
-    melee: z.string(),
-    heal: z.string(),
-    boost: z.string(),
-    player_icon: z.string(),
-    crosshair: z.object({
-        type: z.string(),
-        color: z.number(),
-        size: z.string(),
-        stroke: z.string(),
-    }),
-    emotes: z.array(z.string()).length(6),
-});
 
 export type Loadout = z.infer<typeof loadoutSchema>;
 export type Crosshair = Loadout["crosshair"];
@@ -55,16 +40,14 @@ export const loadout = {
             return val;
         };
         const mergedLoadout = {
-            ...{
-                crosshair: {
-                    type: "",
-                    color: 0xffffff,
-                    size: 1,
-                    stroke: 0,
-                },
-                emotes: [],
+            crosshair: {
+                type: "",
+                color: 0xffffff,
+                size: 1,
+                stroke: 0,
             },
-            ...userLoadout,
+            emotes: [],
+            ...userLoadout as Partial<Loadout>,
         } as Loadout;
         const validatedLoadout: Loadout = {
             outfit: getGameType("outfit", mergedLoadout.outfit, "outfitBase"),
@@ -95,7 +78,7 @@ export const loadout = {
         }
         return validatedLoadout;
     },
-    validateWithAvailableItems: (userLoadout: Loadout, userItems: { type: string }[]) => {
+    validateWithAvailableItems: (userLoadout: Loadout, userItems: { type: string }[]): Loadout => {
         const unlockedItems = new Set([
             ...(userItems?.map((item) => item.type) || []),
             ...UnlockDefs.unlock_default.unlocks,
@@ -106,13 +89,16 @@ export const loadout = {
             }
             return "";
         };
-        const newLoadout: Loadout = {
-            ...{
-                crosshair: {},
-                emotes: [],
+        const newLoadout = {
+            crosshair: {
+                type: "",
+                color: 0xffffff,
+                size: 1,
+                stroke: 0,
             },
-            ...userLoadout,
-        };
+            emotes: [],
+            ...userLoadout as Partial<Loadout>,
+        } as Loadout;
         const itemsToCheck = ["outfit", "melee", "heal", "boost", "player_icon"] as const;
 
         itemsToCheck.forEach((item) => {
@@ -137,7 +123,7 @@ export const loadout = {
                 type: unlock,
                 source: "unlock_default",
                 timeAcquired: 0,
-                ackd: loadout.ItemStatus.Ackd,
+                status: loadout.ItemStatus.Ackd,
             });
         }
         for (let i = 0; i < heroItems.length; i++) {

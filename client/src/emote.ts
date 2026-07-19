@@ -633,7 +633,9 @@ export class EmoteBarn {
                     const playerStatus = this.playerBarn.getPlayerStatus(ping.playerId);
                     if (
                         playerStatus
-                        && (playerStatus.role == "leader" || playerStatus.role == "captain")
+                        && (playerStatus.role == "leader"
+                            || playerStatus.role == "captain"
+                            || playerStatus.role == "last_man")
                     ) {
                         pingSound = pingData.soundLeader!;
                     }
@@ -753,7 +755,7 @@ export class EmoteBarn {
                     e.sprite.texture = PIXI.Texture.from(lootDef.lootImg.sprite);
 
                     // Colorize if defined
-                    const ammo = GameObjectDefs.typeToDef((lootDef as GunDef).ammo) as AmmoDef;
+                    const ammo = GameObjectDefs.typeToDefSafe((lootDef as GunDef).ammo) as AmmoDef;
                     e.circleOuter.tint = ammo ? ammo.lootImg.tintDark! : 0;
 
                     // Rotate if defined
